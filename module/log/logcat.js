@@ -1,5 +1,3 @@
-const util = require('util');
-
 const LOGCAT_A_ENABLE = true;
 const LOGCAT_E_ENABLE = true;
 const LOGCAT_W_ENABLE = true;
@@ -7,11 +5,29 @@ const LOGCAT_I_ENABLE = true;
 const LOGCAT_D_ENABLE = false;
 const LOGCAT_V_ENABLE = false;
 
+function getTime() {
+	var date = new Date();
+	var hours = date.getHours();
+	var minutes = date.getMinutes();
+	var seconds = date.getSeconds();
+
+	if (hours >= 1 && hours <= 9) {
+		hours = "0" + hours;
+	}
+	if (minutes >= 0 && minutes <= 9) {
+		minutes = "0" + minutes;
+	}
+	if (seconds >= 0 && seconds <= 9) {
+		seconds = "0" + seconds;
+	}
+
+	return hours + ":" + minutes + ":" + seconds;
+}
+
 function def(level, TAG, format, ...args) {
 	//console.log("[" + level + "] [" + TAG + "] ", args);
-	var date = new Date();
-	var t = util.format("%d:%d:%d", date.getHours(), date.getMinutes(), date.getSeconds());
-	console.log("[" + t + "] [" + level + "] [" + TAG + "] " + format, ...args);
+
+	console.log("[" + getTime() + "] [" + level + "] [" + TAG + "] " + format, ...args);
 }
 
 function a(TAG, format, ...args) {

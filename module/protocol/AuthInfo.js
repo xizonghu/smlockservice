@@ -1,4 +1,4 @@
-var log = require("./logcat");
+var log = require("../log/logcat");
 
 const TAG = 'AuthInfo';
 

@@ -1,14 +1,13 @@
 var HashMap = require('./HashMap').HashMap;
-var log = require("./logcat");
+var log = require("../log/logcat");
 var net = require('net');
-var DeviceInfo = require("./DeviceInfo").DeviceInfo;
+var DeviceInfo = require("../protocol/DeviceInfo").DeviceInfo;
 var Device = require("./Device").Device;
-var SmartLockInfo = require("./SmartLockInfo");
-var AuthInfo = require("./AuthInfo").AuthInfo;
+var SmartLockInfo = require("../protocol/SmartLockInfo");
+var AuthInfo = require("../protocol/AuthInfo").AuthInfo;
 
 const TAG = 'DeviceService';
-
-//var HOST = "127.0.0.1";  //"192.168.123.1";//'127.0.0.1';
+//var HOST = "192.168.123.1";//'127.0.0.1';
 var PORT = 6666;
 
 var mapSockClient = new HashMap();
@@ -18,12 +17,15 @@ var bufRecv = Buffer.alloc(500);
 var evtReceiver, evtConnect, evtDisconnect;
 
 function send(deviceId, b) {
+    log.d(TAG, "deviceId = %s, b = [%s]", deviceId, b.toString("hex"));
     var sock = mapSockClient.get(deviceId);
     if(sock == null) {
+        log.w(TAG, "device(%s) offline", deviceId);
         return {"succ": -1, "msg": "device " + deviceId + "offline"};
     }
 
     var data = DeviceInfo.packet(mapDeviceInfo.get(deviceId), b);
+    log.i(TAG, "device(%s) send %d", deviceId, data.length);
     log.i(TAG, ">>> [%s]", data.toString("hex"));
     sock.write(data);
     return {"succ": 0, "msg": "ok"};
@@ -67,6 +69,7 @@ net.createServer(function(sockClient) {
         }
         //处理其他数据包
         else if (null != deviceId) {
+            log.i(TAG, "device(%s) recv %d", deviceId, data.length);
             evtReceiver(deviceId, deviceInfo.getPacket());
         }
         //send(deviceId, deviceInfo.getPacket());

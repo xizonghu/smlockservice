@@ -1,6 +1,6 @@
 var HashMap = require('./hashmap').HashMap;
 
-var log = require("./logcat");
+var log = require("../log/logcat");
 var net = require('net');
 
 const TAG = 'socketModule';

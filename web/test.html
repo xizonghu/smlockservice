@@ -1,0 +1,88 @@
+<html>
+<head>
+    <title>config</title>
+</head>
+<body>
+<div>
+    <br><hr color=#987cb9 SIZE=10>
+    <p>SERVER_IP:<input id="SERVER_IP" type="text" maxlength="16"/></p>
+    <p><button id="cmdSmlockLogin">cmdSmlockLogin</button></p>
+
+    <br><hr color=#987cb9 SIZE=10>
+    <p><button id="cmdSmlockLogout">cmdSmlockLogout</button></p>
+
+    <br><hr color=#987cb9 SIZE=10>
+    <p><button id="cmdSmlockOpenDoor">cmdSmlockOpenDoor</button></p>
+
+    <br><hr color=#987cb9 SIZE=10>
+    <p><button id="cmdSmlockGetUnlocktrace">cmdSmlockGetUnlocktrace</button></p>
+
+    <br><hr color=#987cb9 SIZE=10>
+    <div id="log"></div>
+</div>
+<div id="status">...</div>
+<script type="text/javascript">
+    document.addEventListener("click", setConfig);
+
+    function setConfig(e) {
+        var target = e.target;
+        var id = target.getAttribute("id");
+        var postStr = "";
+        if(id.match("cmdSmlockLogin")){
+            postStr = JSON.stringify({TYPE:id});
+        }else if(id.match("cmdSmlockLogout")){
+            postStr = JSON.stringify({TYPE:id});
+        }else if(id.match("cmdSmlockOpenDoor")){
+            postStr = JSON.stringify({TYPE:id});
+        }else if(id.match("cmdSmlockGetUnlocktrace")){
+            postStr = JSON.stringify({TYPE:id});
+        }else{
+            return;
+        }
+        makeRequest(postStr);
+    }
+
+    function makeRequest(postStr) {
+        document.getElementById("status").innerHTML = "Connecting...";
+        var request = new XMLHttpRequest();
+        request.open("POST", "", true);
+        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        request.onreadystatechange = function(){
+            if(request.readyState == 4) {
+                if (request.status == 200) {
+                    var text = request.responseText;
+                    document.getElementById("status").innerHTML = "Done!";
+                } else if (request.status == 0){
+                    document.getElementById("status").innerHTML = "Server Err!";
+                }else {
+                    document.getElementById("status").innerHTML = "Server Error!";
+                }
+            } else {
+                document.getElementById("status").innerHTML = "Connecting...";
+            }
+        }
+        request.send(postStr);
+    }
+
+    function sendPostRequest(str, cb) {
+        var request = new XMLHttpRequest();
+        request.open("POST", "", true);
+        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        request.onreadystatechange = function () {
+            if(request.readyState == 4){
+                if (request.status == 200) {
+                    var text = request.responseText;
+                    var json = JSON.parse(text);
+                    cb(json);
+                    //document.getElementById("log").innerHTML = text;
+                }else {
+                    cb({errno:1});
+                }
+            }
+        };
+        request.send(str);
+    }
+</script>
+</body>
+</html>

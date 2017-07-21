@@ -1,4 +1,4 @@
-var log = require("./logcat");
+var log = require("../log/logcat");
 
 const TAG = 'DeviceInfo';
 
@@ -32,6 +32,7 @@ var DeviceInfo = function(buffer) {
 DeviceInfo.packet = function (info, packet) {
 	var buffer = Buffer.alloc(info.head.length + packet.length);
 	buffer.fill(info.head, 0);
+	buffer.fill(DeviceInfo.LINK_RESPONSE, 3, 4);
 	buffer.fill(DeviceInfo.TYPE_DATA, 13, 14);
 	buffer.fill(packet, info.head.length);
 
@@ -45,6 +46,8 @@ DeviceInfo.packet = function (info, packet) {
 };
 
 //定义类的静态字段
+DeviceInfo.LINK_REQUEST = 0x27;
+DeviceInfo.LINK_RESPONSE = 0x28;
 DeviceInfo.TYPE_AUTH = 0xff;
 DeviceInfo.TYPE_DATA = 0x25;
 
