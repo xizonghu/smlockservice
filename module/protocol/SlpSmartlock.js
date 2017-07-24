@@ -17,14 +17,14 @@ SlpSmartlock.process = function (deviceId, slp, callback) {
             break;
         }
         case SlpSmartlock.TYPE_GET_BATTERY: {
-            var battery = slp.data.readUInt16BE(0);
+            var battery = slp.data.readUInt8(0);
             if (callback.onGetBatteryEvent) callback.onGetBatteryEvent({deviceId: deviceId, battery: battery});
             break;
         }
         case SlpSmartlock.TYPE_GET_STORAGE: {
             var fp = slp.data.readUInt16BE(0);
-            var ic = slp.data.readUInt16BE(2);
-            var ch = slp.data.readUInt16BE(4);
+            var ch = slp.data.readUInt16BE(2);
+            var ic = slp.data.readUInt16BE(4);
             if (callback.onGetStorageEvent) callback.onGetStorageEvent({deviceId: deviceId, fp: fp, ch: ch, ic: ic});
             break;
         }
