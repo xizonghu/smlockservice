@@ -25,6 +25,10 @@ var SmartlockListenner = {
 
     onSmlockGetUnlocktraceEvent: function(obj) {
         log.i(TAG, "onSmlockGetUnlocktraceEvent(): index = %d, userid = %d", obj.index, obj.userid);
+    },
+
+    onSmlockExceptionEvent: function(obj) {
+        log.i(TAG, "onSmlockExceptionEvent(): errno = %d", obj.errno);
     }
 };
 
@@ -83,7 +87,7 @@ rpc_rmote.ackSmlockEvent(SmartlockListenner);
 function processJson(strJson) {
     var obj = JSON.parse(strJson);
     if ("cmdSmlockLogin" == obj.TYPE) {
-        rpc_rmote.cmdSmlockLogin({deviceId: deviceId, lockid: [1,2,3,4,5,6], pwd: [7,7,7,7,7,7]});
+        rpc_rmote.cmdSmlockLogin({deviceId: deviceId, lockId: "\x11\x12\x13\x11\x12\x13", pwd: "111111"});
     }
     else if ("cmdSmlockLogout" == obj.TYPE) {
         rpc_rmote.cmdSmlockLogout({deviceId: deviceId});

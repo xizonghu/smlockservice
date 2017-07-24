@@ -16,19 +16,20 @@ var mapDeviceInfo = new HashMap();
 var bufRecv = Buffer.alloc(500);
 var evtReceiver, evtConnect, evtDisconnect;
 
-function send(deviceId, b) {
+function send(deviceId, b, resCallback) {
     log.d(TAG, "deviceId = %s, b = [%s]", deviceId, b.toString("hex"));
     var sock = mapSockClient.get(deviceId);
     if(sock == null) {
         log.w(TAG, "device(%s) offline", deviceId);
-        return {"succ": -1, "msg": "device " + deviceId + "offline"};
+        resCallback({errno: 0x81});
+        return;
     }
 
     var data = DeviceInfo.packet(mapDeviceInfo.get(deviceId), b);
     log.i(TAG, "device(%s) send %d", deviceId, data.length);
     log.i(TAG, ">>> [%s]", data.toString("hex"));
     sock.write(data);
-    return {"succ": 0, "msg": "ok"};
+    resCallback({errno: 0});
 }
 
 function onConnect(callback) {

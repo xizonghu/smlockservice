@@ -43,7 +43,11 @@ var listenner = {
     onGetUnlocktraceEvent: function(obj) {
         log.d(TAG, "onGetUnlocktraceEvent()");
         rpcCallbk.onSmlockGetUnlocktraceEvent(obj);
-    }
+    },
+    onSmlockExceptionEvent: function(obj) {
+        log.d(TAG, "onSmlockExceptionEvent()");
+        if (rpcCallbk.onSmlockExceptionEvent) rpcCallbk.onSmlockExceptionEvent(obj);
+    },
 }
 
 var api = {
@@ -98,6 +102,7 @@ function receiverCallbk (deviceId, data) {
     else if (SLP.LINK_SMLOCK_TO_SERVER == slp.link) {
         SlpSmartlock.process(deviceId, slp, listenner);
     }
+    //来自通讯服务
 }
 
 function connectCallbk (deviceId) {
@@ -111,7 +116,11 @@ function disconnectCallbk (deviceId) {
 
 function cmdSend(deviceId, packet) {
     log.d(TAG, "cmdSend(): deviceId = %s", deviceId);
-    deviceService.send(deviceId, packet);
+    deviceService.send(deviceId, packet, function (errno) {
+        if (errno) {
+            listenner.onSmlockExceptionEvent({deviceId: deviceId, errno: 0x81});
+        }
+    });
 }
 
 function ackSmlock(listenner) {
