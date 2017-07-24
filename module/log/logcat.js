@@ -2,7 +2,7 @@ const LOGCAT_A_ENABLE = true;
 const LOGCAT_E_ENABLE = true;
 const LOGCAT_W_ENABLE = true;
 const LOGCAT_I_ENABLE = true;
-const LOGCAT_D_ENABLE = false;
+const LOGCAT_D_ENABLE = true;
 const LOGCAT_V_ENABLE = false;
 
 function getTime() {

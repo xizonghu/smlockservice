@@ -13,58 +13,73 @@ var smlockpwd;
 //当有BLE_MASTER过来的消息时，该listenner被触发
 var listenner = {
     onConnectEvent: function(obj) {
+        log.d(TAG, "onConnectEvent()");
         cmdSend(obj.deviceId, SlpSmartlock.login(smlockpwd));
     },
     onDisconnectEvent: function(obj) {
+        log.d(TAG, "onDisconnectEvent()");
         rpcCallbk.onSmlockLogoutEvent(obj);
     },
     onLoginEvent: function(obj) {
+        log.d(TAG, "onLoginEvent()");
         rpcCallbk.onSmlockLoginEvent(obj);
     },
     onLogoutEvent: function(obj) {
+        log.d(TAG, "onLogoutEvent()");
         cmdSend(obj.deviceId, SlpBlemaster.disconncet());
     },
     onOpenDoorEvent: function(obj) {
+        log.d(TAG, "onOpenDoorEvent()");
         rpcCallbk.onSmlockOpenDoorEvent(obj);
     },
     onGetBatteryEvent: function(obj) {
+        log.d(TAG, "onGetBatteryEvent()");
         rpcCallbk.onSmlockGetBatteryEvent(obj);
     },
     onGetStorageEvent: function(obj) {
+        log.d(TAG, "onGetStorageEvent()");
         rpcCallbk.onSmlockGetStorageEvent(obj);
     },
     onGetUnlocktraceEvent: function(obj) {
+        log.d(TAG, "onGetUnlocktraceEvent()");
         rpcCallbk.onSmlockGetUnlocktraceEvent(obj);
     }
 }
 
 var api = {
     cmdSmlockOpenDoor: function(obj){
+        log.d(TAG, "cmdSmlockOpenDoor()");
         cmdSend(obj.deviceId, SlpSmartlock.openDoor());
     },
 
     cmdSmlockGetBattery: function(obj){
+        log.d(TAG, "cmdSmlockGetBattery()");
         cmdSend(obj.deviceId, SlpSmartlock.getBattery());
     },
 
     cmdSmlockGetStorage: function(obj){
+        log.d(TAG, "cmdSmlockGetStorage()");
         cmdSend(obj.deviceId, SlpSmartlock.getStorage());
     },
 
     cmdSmlockGetUnlocktrace: function(obj){
+        log.d(TAG, "cmdSmlockGetUnlocktrace()");
         cmdSend(obj.deviceId, SlpSmartlock.getUnlocktrace(obj.index));
     },
 
     cmdSmlockLogin: function(obj) {
+        log.d(TAG, "cmdSmlockLogin()");
         smlockpwd = obj.pwd;
         cmdSend(obj.deviceId, SlpBlemaster.connect(obj.lockId));
     },
 
     cmdSmlockLogout: function(obj) {
+        log.d(TAG, "cmdSmlockLogout()");
         cmdSend(obj.deviceId, SlpSmartlock.logout());
     },
 
     ackSmlockEvent: function(obj) {
+        log.d(TAG, "ackSmlockEvent()");
         rpcCallbk = obj;
     }
 };
