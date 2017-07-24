@@ -57,7 +57,7 @@ var api = {
 
     cmdSmlockLogin: function(obj) {
         smlockpwd = obj.pwd;
-        cmdSend(obj.deviceId, SlpBlemaster.connect(obj.lockid));
+        cmdSend(obj.deviceId, SlpBlemaster.connect(obj.lockId));
     },
 
     cmdSmlockLogout: function(obj) {
@@ -112,6 +112,7 @@ deviceService.onReceiver(receiverCallbk);
 deviceService.onConnect(connectCallbk);
 deviceService.onDisconnet(disconnectCallbk);
 
+//api.cmdSmlockLogin({deviceId: '0x00000001', lockId: '000001', pwd: '123456'});
 //var s = SlpSmartlock.login("123456");
 //s = SlpBlemaster.connect("122334455667");
 //var s = SlpSmartlock.getUnlocktrace(1);
