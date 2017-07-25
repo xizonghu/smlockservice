@@ -136,7 +136,7 @@ deviceService.onReceiver(receiverCallbk);
 deviceService.onConnect(connectCallbk);
 deviceService.onDisconnet(disconnectCallbk);
 
-cmdSend("123456",Buffer.from([1,2,3,4,5,6]));
+//cmdSend("123456",Buffer.from([1,2,3,4,5,6]));
 //api.cmdSmlockLogin({deviceId: '0x00000001', lockId: '000001', pwd: '123456'});
 //var s = SlpSmartlock.login("123456");
 //s = SlpBlemaster.connect("122334455667");
