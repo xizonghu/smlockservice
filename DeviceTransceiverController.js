@@ -117,7 +117,7 @@ function disconnectCallbk (deviceId) {
 function cmdSend(deviceId, packet) {
     log.d(TAG, "cmdSend(): deviceId = %s", deviceId);
     deviceService.send(deviceId, packet, function (errno) {
-        if (errno) {
+        if (0 != errno) {
             listenner.onSmlockExceptionEvent({deviceId: deviceId, errno: 0x81});
         }
     });

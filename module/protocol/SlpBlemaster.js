@@ -43,8 +43,8 @@ SlpBlemaster.discovery = function() {
 
 SlpBlemaster.connect = function(addr) {
     var buf1 = Buffer.from([0x55, 0x1d, 0x03, 0x06]);
-    //var buf2 = Buffer.from(addr, "hex");
-    var buf2 = Buffer.from(addr, "ascii");
+    var buf2 = Buffer.from(addr.replace(/:/g,""), "hex");
+    buf2 = abc2cba(buf2);
     var buf = Buffer.concat([buf1, buf2], buf1.length + buf2.length);
     return buf;
 }
@@ -61,4 +61,16 @@ SlpBlemaster.reboot = function() {
     return Buffer.from([0x55, 0x1d, 0x7e, 0x00]);
 }
 
+function abc2cba(buf) {
+    var len = buf.length;
+    var buf2 = Buffer.alloc(len);
+    for(i = 0; i < len; i++) {
+        buf2[len - 1 - i] = buf[i];
+    }
+    return buf2;
+}
 exports.SlpBlemaster = SlpBlemaster;
+
+var mac = "12:23:34:45:56:67";
+var buf = SlpBlemaster.connect(mac);
+SlpBlemaster.connect(mac);
