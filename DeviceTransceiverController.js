@@ -116,8 +116,8 @@ function disconnectCallbk (deviceId) {
 
 function cmdSend(deviceId, packet) {
     log.d(TAG, "cmdSend(): deviceId = %s", deviceId);
-    deviceService.send(deviceId, packet, function (errno) {
-        if (0 != errno) {
+    deviceService.send(deviceId, packet, function (obj) {
+        if (0 != obj.errno) {
             listenner.onSmlockExceptionEvent({deviceId: deviceId, errno: 0x81});
         }
     });
@@ -136,6 +136,7 @@ deviceService.onReceiver(receiverCallbk);
 deviceService.onConnect(connectCallbk);
 deviceService.onDisconnet(disconnectCallbk);
 
+cmdSend("123456",Buffer.from([1,2,3,4,5,6]));
 //api.cmdSmlockLogin({deviceId: '0x00000001', lockId: '000001', pwd: '123456'});
 //var s = SlpSmartlock.login("123456");
 //s = SlpBlemaster.connect("122334455667");

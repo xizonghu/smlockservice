@@ -70,7 +70,3 @@ function abc2cba(buf) {
     return buf2;
 }
 exports.SlpBlemaster = SlpBlemaster;
-
-var mac = "12:23:34:45:56:67";
-var buf = SlpBlemaster.connect(mac);
-SlpBlemaster.connect(mac);
