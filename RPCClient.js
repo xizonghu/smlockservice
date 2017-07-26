@@ -1,7 +1,6 @@
 const TAG = 'RPCClient';
 var log = require("./module/log/logcat");
 var light_rpc = require('./module/rpc/index.js');
-var port = 6667;
 var rpc = new light_rpc();
 
 var SmartlockListenner = {
@@ -104,6 +103,8 @@ var http = require('http');
 var url = require("url");
 var path = require("path");
 var strIndex = require("./web/test").strIndex;
+var hostname = "localhost";
+var port = 7777;
 
 http.createServer(function (req, res) {
     // 设置接收数据编码格式为 UTF-8
@@ -117,10 +118,14 @@ http.createServer(function (req, res) {
     req.addListener("end", function () {
         console.log('数据接收完毕');
         console.log(postData);
+        if ("" == postData) {
+            console.log('空');
+            return;
+        }
         processJson(postData);
     });
     res.writeHead(200, {"Content-Type": "text/html"});
     res.end(Buffer.from(strIndex));
 
-}).listen(3000, "127.0.0.1");
-console.log('Server running at http://127.0.0.1:3000/');
+}).listen(port, hostname);
+console.log("Server running at http://localhost:7777/");
