@@ -14,7 +14,9 @@ var smlockpwd;
 var listenner = {
     onConnectEvent: function(obj) {
         log.d(TAG, "onConnectEvent()");
-        cmdSend(obj.deviceId, SlpSmartlock.login(smlockpwd));
+        setTimeout(function() {
+            cmdSend(obj.deviceId, SlpSmartlock.login(smlockpwd));
+        }, 2500);
     },
     onDisconnectEvent: function(obj) {
         log.d(TAG, "onDisconnectEvent()");
