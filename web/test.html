@@ -5,7 +5,7 @@
 <body>
 <div>
     <br><hr color=#987cb9 SIZE=10>
-    <p>SERVER_IP:<input id="SERVER_IP" type="text" maxlength="16"/></p>
+    <p>deviceId:<input id="deviceId" type="text" maxlength="12" value="smartlock_00001"/></p>
     <p><button id="cmdSmlockLogin">cmdSmlockLogin</button></p>
 
     <br><hr color=#987cb9 SIZE=10>
@@ -27,15 +27,16 @@
     function setConfig(e) {
         var target = e.target;
         var id = target.getAttribute("id");
+		var deviceId = document.getElementById("deviceId").value;
         var postStr = "";
         if(id.match("cmdSmlockLogin")){
-            postStr = JSON.stringify({TYPE:id});
+            postStr = JSON.stringify({deviceId:deviceId,cmd:id});
         }else if(id.match("cmdSmlockLogout")){
-            postStr = JSON.stringify({TYPE:id});
+            postStr = JSON.stringify({deviceId:deviceId,cmd:id});
         }else if(id.match("cmdSmlockOpenDoor")){
-            postStr = JSON.stringify({TYPE:id});
+            postStr = JSON.stringify({deviceId:deviceId,cmd:id});
         }else if(id.match("cmdSmlockGetUnlocktrace")){
-            postStr = JSON.stringify({TYPE:id});
+            postStr = JSON.stringify({deviceId:deviceId,cmd:id});
         }else{
             return;
         }

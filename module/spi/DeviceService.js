@@ -16,11 +16,19 @@ var mapDeviceInfo = new HashMap();
 var bufRecv = Buffer.alloc(500);
 var evtReceiver, evtConnect, evtDisconnect;
 
+function deviceOnline(deviceId) {
+    log.i(TAG, "[device(%s) online]", deviceId);
+}
+
+function deviceOffline(deviceId) {
+    log.i(TAG, "[device(%s) offline]", deviceId);
+}
+
 function send(deviceId, b, resCallback) {
     log.d(TAG, "deviceId = %s, b = [%s]", deviceId, b.toString("hex"));
     var sock = mapSockClient.get(deviceId);
     if(sock == null) {
-        log.w(TAG, "device(%s) offline", deviceId);
+        deviceOffline(deviceId);
         resCallback({errno: 0x81});
         return;
     }
@@ -66,6 +74,7 @@ net.createServer(function(sockClient) {
                 mapSockClient.set(deviceId, sockClient);
                 mapDeviceInfo.set(deviceId, deviceInfo);
                 evtConnect(deviceId);
+                deviceOnline(deviceId);
             }
         }
         //处理其他数据包
@@ -82,6 +91,7 @@ net.createServer(function(sockClient) {
             mapSockClient.remove(deviceId);
             mapDeviceInfo.remove(deviceId);
             evtDisconnect(deviceId);
+            deviceOffline(deviceId);
         }
     });
 }).listen(PORT);

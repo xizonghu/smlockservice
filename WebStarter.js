@@ -1,29 +1,99 @@
 const TAG = 'WebStarter';
 var log = require("./module/log/logcat");
-
-function processJson(strJson) {
-    var obj = JSON.parse(strJson);
-    if ("cmdSmlockLogin" == obj.TYPE) {
-        rpc_rmote.cmdSmlockLogin({deviceId: deviceId, lockId: "\x11\x12\x13\x11\x12\x13", pwd: "111111"});
-    }
-    else if ("cmdSmlockLogout" == obj.TYPE) {
-        rpc_rmote.cmdSmlockLogout({deviceId: deviceId});
-    }
-    else if ("cmdSmlockOpenDoor" == obj.TYPE) {
-        rpc_rmote.cmdSmlockOpenDoor({deviceId: deviceId});
-    }
-    else if ("cmdSmlockGetUnlocktrace" == obj.TYPE) {
-        rpc_rmote.cmdSmlockGetUnlocktrace({deviceId: deviceId, index: 1});
-    }
-}
-
+var rpc_rmote =  require("./DeviceTransceiverController").api;
 var http = require('http');
-var url = require("url");
-var path = require("path");
+//var url = require("url");
+//var path = require("path");
 var strIndex = require("./web/test").strIndex;
 var hostname = "localhost";
 var port = 7777;
+var deviceId = "smlock_00001";
 
+var SmartlockListenner = {
+    onSmlockLoginEvent: function(obj) {
+        log.i(TAG, "onSmlockLoginEvent(): errno = %d", obj.errno);
+    },
+    onSmlockLogoutEvent: function(obj) {
+        log.i(TAG, "onSmlockLogoutEvent(): errno = %d", obj.errno);
+    },
+    onSmlockOpenDoorEvent: function(obj) {
+        log.i(TAG, "onSmlockOpenDoorEvent(): errno = %d", obj.errno);
+    },
+
+    onSmlockGetBatteryEvent: function(obj) {
+        log.i(TAG, "onSmlockGetBatteryEvent(): battery = %d", obj.battery);
+    },
+
+    onSmlockGetStorageEvent: function(obj) {
+        log.i(TAG, "onSmlockGetStorageEvent(): fp = %d, ch = %d, ic = %d", obj.fp, obj.ch, obj.ic);
+    },
+
+    onSmlockGetUnlocktraceEvent: function(obj) {
+        log.i(TAG, "onSmlockGetUnlocktraceEvent(): index = %d, userid = %d", obj.index, obj.userid);
+    },
+
+    onSmlockExceptionEvent: function(obj) {
+        log.i(TAG, "onSmlockExceptionEvent(): errno = %d", obj.errno);
+    }
+};
+
+function cmdSmlockLogout(obj) {
+    rpc.connect(port, 'localhost', function(remote, conn){
+        remote.cmdSmlockLogout(obj);
+        conn.destroy();
+        conn.end();
+    });
+}
+
+function cmdSmlockOpenDoor(obj) {
+    rpc.connect(port, 'localhost', function(remote, conn){
+        remote.cmdSmlockOpenDoor(obj);
+        conn.destroy();
+        conn.end();
+    });
+}
+
+function cmdSmlockGetBattery(obj) {
+    rpc.connect(port, 'localhost', function(remote, conn){
+        remote.cmdSmlockGetBattery(obj);
+        conn.destroy();
+        conn.end();
+    });
+}
+function cmdSmlockGetStorage(obj) {
+    rpc.connect(port, 'localhost', function(remote, conn){
+        remote.cmdSmlockGetStorage(obj);
+        conn.destroy();
+        conn.end();
+    });
+}
+
+function cmdSmlockGetUnlocktrace(obj) {
+    rpc.connect(port, 'localhost', function(remote, conn){
+        remote.cmdSmlockGetUnlocktrace(obj);
+
+    });
+}
+
+function processJson(strJson) {
+    var obj = JSON.parse(strJson);
+    if(!obj) return;
+    if(!obj.deviceId) return;
+    if ("cmdSmlockLogin" == obj.cmd) {
+        rpc_rmote.cmdSmlockLogin({deviceId: obj.deviceId, lockId: "50:F1:4A:AC:7F:67", pwd: "111111"});
+    }
+    else if ("cmdSmlockLogout" == obj.cmd) {
+        rpc_rmote.cmdSmlockLogout({deviceId: obj.deviceId});
+    }
+    else if ("cmdSmlockOpenDoor" == obj.cmd) {
+        rpc_rmote.cmdSmlockOpenDoor({deviceId: obj.deviceId});
+    }
+    else if ("cmdSmlockGetUnlocktrace" == obj.cmd) {
+        rpc_rmote.cmdSmlockGetUnlocktrace({deviceId: obj.deviceId, index: 1});
+    }
+}
+
+rpc_rmote.ackSmlockEvent(SmartlockListenner);
 http.createServer(function (req, res) {
     // 设置接收数据编码格式为 UTF-8
     req.setEncoding('utf-8');

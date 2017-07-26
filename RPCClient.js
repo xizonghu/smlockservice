@@ -86,7 +86,7 @@ rpc_rmote.ackSmlockEvent(SmartlockListenner);
 function processJson(strJson) {
     var obj = JSON.parse(strJson);
     if ("cmdSmlockLogin" == obj.TYPE) {
-        rpc_rmote.cmdSmlockLogin({deviceId: deviceId, lockId: "\x11\x12\x13\x11\x12\x13", pwd: "111111"});
+        rpc_rmote.cmdSmlockLogin({deviceId: deviceId, lockId: "50:F1:4A:AC:7F:67", pwd: "111111"});
     }
     else if ("cmdSmlockLogout" == obj.TYPE) {
         rpc_rmote.cmdSmlockLogout({deviceId: deviceId});

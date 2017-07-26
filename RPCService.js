@@ -42,12 +42,6 @@ var rpc = new light_rpc({
         controller.api.ackSmlockEvent(obj);
     }
 });
-var a = [1,2,3];
-var b = [4,5,6];
-var c = Buffer.from(a) + Buffer.from(b);
-var d = [];
-var c.t
-d.push(a);
 
 log.i(TAG, "SmartLock RPC Service listen at port %d", port);
 rpc.listen(port);
