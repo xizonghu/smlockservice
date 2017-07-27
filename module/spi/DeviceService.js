@@ -29,7 +29,7 @@ function send(deviceId, b, resCallback) {
     var sock = mapSockClient.get(deviceId);
     if(sock == null) {
         deviceOffline(deviceId);
-        resCallback({errno: 0x81});
+        resCallback({errno: SmartLockException.ERRNO_DEVICE_OFFLINE});
         return;
     }
 

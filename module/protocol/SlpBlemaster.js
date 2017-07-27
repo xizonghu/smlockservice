@@ -1,3 +1,4 @@
+var SmartLockException = require('./ExceptionErrno').SmartLockException;
 var SlpBlemaster = function() {
 }
 
@@ -6,6 +7,12 @@ SlpBlemaster.TYPE_LIST = 0x05;
 SlpBlemaster.TYPE_CONNECT = 0x03;
 SlpBlemaster.TYPE_DISCONNECT = 0x04;
 SlpBlemaster.TYPE_REBOOT = 0x7e;
+SlpBlemaster.TYPE_EXCEPTION = 0xfe;
+
+
+SlpBlemaster.ERRNO_CONNECT_ALREADY = 0x02;
+SlpBlemaster.ERRNO_DISCONNECT_ALREADY = 0x00;
+SlpBlemaster.ERRNO_REJECT_DATA = -4;
 
 SlpBlemaster.process = function (deviceId, slp, callback) {
     switch (slp.type) {
@@ -21,13 +28,30 @@ SlpBlemaster.process = function (deviceId, slp, callback) {
             break;
         }
         case SlpBlemaster.TYPE_CONNECT: {
-            var errno = slp.data.readUInt8(0);
+            var errno = slp.data.readInt8(0);
+            if (SlpBlemaster.ERRNO_CONNECT_ALREADY == errno) {
+                callback.onSmlockExceptionEvent({deviceId: deviceId, errno: SmartLockException.ERRNO_CONNECT_ALREADY});
+                break;
+            }
             if (callback.onConnectEvent) callback.onConnectEvent({deviceId: deviceId, errno: errno});
             break;
         }
         case SlpBlemaster.TYPE_DISCONNECT: {
-            var errno = slp.data.readUInt8(0);
-            if (callback.onDisconnectEvent) callback.onDisconnectEvent({deviceId: deviceId, errno: errno});
+            var errno = slp.data.readInt8(0);
+            if (SlpBlemaster.ERRNO_DISCONNECT_ALREADY == errno) {
+                callback.onSmlockExceptionEvent({deviceId: deviceId, errno: SmartLockException.ERRNO_DISCONNECT_ALREADY});
+                break;
+            }
+            if (callback.onDisconnectEvent) callback.onDisconnectEvent({deviceId: deviceId, errno: 0});
+            break;
+        }
+        case SlpBlemaster.TYPE_EXCEPTION: {
+            var errno = slp.data.readInt8(0);
+            if (SlpBlemaster.ERRNO_REJECT_DATA == errno) {
+                callback.onSmlockExceptionEvent({deviceId: deviceId, errno: SmartLockException.ERRNO_NOT_CONNECTED});
+                break;
+            }
+            callback.onSmlockExceptionEvent({deviceId: deviceId, errno: 0});
             break;
         }
         default: {

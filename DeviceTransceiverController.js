@@ -16,7 +16,7 @@ var listenner = {
         log.d(TAG, "onConnectEvent()");
         setTimeout(function() {
             cmdSend(obj.deviceId, SlpSmartlock.login(smlockpwd));
-        }, 2500);
+        }, 2500);  //蓝牙连接后必须要有2秒以上的延时后，才能收发数据
     },
     onDisconnectEvent: function(obj) {
         log.d(TAG, "onDisconnectEvent()");
