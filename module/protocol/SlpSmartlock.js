@@ -33,7 +33,7 @@ SlpSmartlock.process = function (deviceId, slp, callback) {
                 deviceId: deviceId,
                 index: slp.data.readUInt8(0),
                 userid: slp.data.readUInt16BE(1),
-                year: slp.data.readUInt8(3),
+                year: slp.data.readUInt8(3) + 2000,
                 month: slp.data.readUInt8(4),
                 day: slp.data.readUInt8(5),
                 hour: slp.data.readUInt8(6),
