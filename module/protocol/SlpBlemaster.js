@@ -30,8 +30,8 @@ SlpBlemaster.process = function (deviceId, slp, callback) {
         case SlpBlemaster.TYPE_CONNECT: {
             var errno = slp.data.readInt8(0);
             if (SlpBlemaster.ERRNO_CONNECT_ALREADY == errno) {
-                callback.onSmlockExceptionEvent({deviceId: deviceId, errno: SmartLockException.ERRNO_CONNECT_ALREADY});
-                break;
+                //callback.onSmlockExceptionEvent({deviceId: deviceId, errno: SmartLockException.ERRNO_CONNECT_ALREADY});
+                //break;
             }
             if (callback.onConnectEvent) callback.onConnectEvent({deviceId: deviceId, errno: errno});
             break;
