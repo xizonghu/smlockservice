@@ -33,12 +33,12 @@ SlpSmartlock.process = function (deviceId, slp, callback) {
                 deviceId: deviceId,
                 index: slp.data.readUInt8(0),
                 userid: slp.data.readUInt16BE(1),
-                year: slp.data.readUInt8(2),
-                month: slp.data.readUInt8(3),
-                day: slp.data.readUInt8(4),
-                hour: slp.data.readUInt8(5),
-                minute: slp.data.readUInt8(6),
-                second: slp.data.readUInt8(7),
+                year: slp.data.readUInt8(3),
+                month: slp.data.readUInt8(4),
+                day: slp.data.readUInt8(5),
+                hour: slp.data.readUInt8(6),
+                minute: slp.data.readUInt8(7),
+                second: slp.data.readUInt8(8),
             };
             if (callback.onGetUnlocktraceEvent) callback.onGetUnlocktraceEvent(unlocktrace);
             break;
