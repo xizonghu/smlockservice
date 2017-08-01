@@ -5,6 +5,7 @@ var DeviceInfo = require("../protocol/DeviceInfo").DeviceInfo;
 var Device = require("./Device").Device;
 var SmartLockInfo = require("../protocol/SmartLockInfo");
 var AuthInfo = require("../protocol/AuthInfo").AuthInfo;
+var SmartLockException = require('../protocol/ExceptionErrno').SmartLockException;
 
 const TAG = 'DeviceService';
 //var HOST = "192.168.123.1";//'127.0.0.1';
