@@ -1,10 +1,13 @@
 var deviceService = require('./module/spi/DeviceService');
+var HashMap = require('./module/spi/HashMap').HashMap;
 var log = require("./module/log/logcat");
 var SLP = require('./module/protocol/SLP').SLP;
 var SlpSmartlock = require('./module/protocol/SlpSmartlock').SlpSmartlock;
 var SlpBlemaster = require('./module/protocol/SlpBlemaster').SlpBlemaster;
 
 const TAG = 'DeviceTransceiverController';
+
+var mapPwd = new HashMap();
 
 //来自远程调用的回调函数
 var rpcCallbk = null;
@@ -15,7 +18,9 @@ var listenner = {
     onConnectEvent: function(obj) {
         log.d(TAG, "onConnectEvent()");
         setTimeout(function() {
-            cmdSend(obj.deviceId, SlpSmartlock.login(smlockpwd));
+            var pwd = mapPwd.get(obj.deviceId);
+            mapPwd.remove(obj.deviceId);
+            cmdSend(obj.deviceId, SlpSmartlock.login(pwd));
         }, 2500);  //蓝牙连接后必须要有2秒以上的延时后，才能收发数据
     },
     onDisconnectEvent: function(obj) {
@@ -75,7 +80,7 @@ var api = {
 
     cmdSmlockLogin: function(obj) {
         log.d(TAG, "cmdSmlockLogin()");
-        smlockpwd = obj.pwd;
+        mapPwd.set(obj.deviceId, obj.pwd);
         cmdSend(obj.deviceId, SlpBlemaster.connect(obj.lockId));
     },
 
